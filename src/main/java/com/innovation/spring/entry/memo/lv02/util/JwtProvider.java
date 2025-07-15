@@ -1,4 +1,36 @@
 package com.innovation.spring.entry.memo.lv02.util;
 
+import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.Date;
+
 public class JwtProvider {
+
+    private final long ACCESS_TOKEN_EXPIRED_TIME = Duration.ofMinutes(30).toMillis();
+    private final SecretKey accessTokenSecretKey;
+
+    public JwtProvider(
+            @Value("${spring.jwt.secret.access}") String accessSecretKey
+    ) {
+        this.accessTokenSecretKey = new SecretKeySpec(
+                accessSecretKey.getBytes(StandardCharsets.UTF_8),
+                Jwts.SIG.HS512.key().build().getAlgorithm()
+        );
+    }
+
+    public String generateAccessToken(String userId) {
+        Date now = new Date();
+
+        return Jwts.builder()
+                .claim("id", userId)
+                .issuedAt(now)
+                .expiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRED_TIME))
+                .signWith(accessTokenSecretKey)
+                .compact();
+    }
 }
