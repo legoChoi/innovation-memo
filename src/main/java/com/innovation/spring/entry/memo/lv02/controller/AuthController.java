@@ -2,6 +2,8 @@ package com.innovation.spring.entry.memo.lv02.controller;
 
 import com.innovation.spring.entry.memo.lv02.dto.request.AuthSignInRequest;
 import com.innovation.spring.entry.memo.lv02.dto.request.AuthSignUpRequest;
+import com.innovation.spring.entry.memo.lv02.dto.response.AuthSignInResponse;
+import com.innovation.spring.entry.memo.lv02.dto.response.AuthSignUpResponse;
 import com.innovation.spring.entry.memo.lv02.service.AuthService;
 import com.innovation.spring.entry.memo.lv02.util.UriUtil;
 import jakarta.validation.Valid;
@@ -20,22 +22,22 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signin")
-    public ResponseEntity<Void> signIn(
+    public ResponseEntity<AuthSignInResponse> signIn(
             @RequestBody @Valid AuthSignInRequest authSignInRequest
     ) {
-        authService.signIn(authSignInRequest);
+        AuthSignInResponse response = authService.signIn(authSignInRequest);
 
         return ResponseEntity.ok()
-                .build();
+                .body(response);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signUp(
+    public ResponseEntity<AuthSignUpResponse> signUp(
             @RequestBody @Valid AuthSignUpRequest authSignUpRequest
     ) {
-        authService.signUp(authSignUpRequest);
+        AuthSignUpResponse response = authService.signUp(authSignUpRequest);
 
         return ResponseEntity.created(UriUtil.getSignInUri())
-                .build();
+                .body(response);
     }
 }

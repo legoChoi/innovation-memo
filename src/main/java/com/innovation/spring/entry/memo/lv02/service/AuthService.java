@@ -2,10 +2,13 @@ package com.innovation.spring.entry.memo.lv02.service;
 
 import com.innovation.spring.entry.memo.lv02.dto.request.AuthSignInRequest;
 import com.innovation.spring.entry.memo.lv02.dto.request.AuthSignUpRequest;
+import com.innovation.spring.entry.memo.lv02.dto.response.AuthSignInResponse;
+import com.innovation.spring.entry.memo.lv02.dto.response.AuthSignUpResponse;
 import com.innovation.spring.entry.memo.lv02.entity.User;
 import com.innovation.spring.entry.memo.lv02.exception.CustomRuntimeException;
 import com.innovation.spring.entry.memo.lv02.exception.ExceptionMessage;
 import com.innovation.spring.entry.memo.lv02.repository.UserRepository;
+import com.innovation.spring.entry.memo.lv02.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void signIn(AuthSignInRequest authSignInRequest) {
+    public AuthSignInResponse signIn(AuthSignInRequest authSignInRequest) {
         User user = userRepository.findByEmail(authSignInRequest.email())
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionMessage.EMAIL_USER_NOT_FOUND));
 
@@ -25,10 +29,14 @@ public class AuthService {
             throw new CustomRuntimeException(ExceptionMessage.PASSWORD_MISMATCH);
         }
 
-        // access token 반환
+        String accessToken = jwtProvider.generateAccessToken(user.getId());
+
+        return AuthSignInResponse.builder()
+                .accessToken(accessToken)
+                .build();
     }
 
-    public void signUp(AuthSignUpRequest authSignUpRequest) {
+    public AuthSignUpResponse signUp(AuthSignUpRequest authSignUpRequest) {
         if (userRepository.existsByEmail(authSignUpRequest.email())) {
             throw new CustomRuntimeException(ExceptionMessage.ALREADY_REGISTERED_USER_EMAIL);
         }
@@ -42,6 +50,10 @@ public class AuthService {
 
         userRepository.save(user);
 
-        // access token 반환
+        String accessToken = jwtProvider.generateAccessToken(user.getId());
+
+        return AuthSignUpResponse.builder()
+                .accessToken(accessToken)
+                .build();
     }
 }
