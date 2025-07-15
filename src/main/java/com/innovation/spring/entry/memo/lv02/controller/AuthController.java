@@ -23,6 +23,7 @@ public class AuthController {
     public ResponseEntity<Void> signIn(
             @RequestBody @Valid AuthSignInRequest authSignInRequest
     ) {
+        authService.signIn(authSignInRequest);
 
         return ResponseEntity.ok()
                 .build();
