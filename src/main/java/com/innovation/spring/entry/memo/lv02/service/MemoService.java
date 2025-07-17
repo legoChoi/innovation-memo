@@ -15,7 +15,6 @@ public class MemoService {
     private final MemoRepository memoRepository;
 
     public MemosFindResponse getMemosByKeyword(String keyword) {
-        System.out.println("keyword = " + keyword);
         List<Memo> memos = memoRepository.getMemosByKeyword(keyword);
 
         return MemosFindResponse.of(memos);
