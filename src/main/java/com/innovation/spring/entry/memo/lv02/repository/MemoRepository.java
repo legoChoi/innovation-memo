@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MemoRepository extends JpaRepository<Memo, Long> {
 
-    @Query("select m from Memo m where m.contents like %:keyword% order by m.updatedAt desc")
+    @Query("select m from Memo m where m.contents like concat('%', :keyword, '%') order by m.updatedAt desc")
     List<Memo> getMemosByKeyword(String keyword);
 
     List<Memo> findMemosByContentsContainsOrderByUpdatedAtDesc(String keyword);
