@@ -12,6 +12,7 @@ import com.innovation.spring.entry.memo.lv03.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public AuthSignUpResponse signUp(AuthSignUpRequest authSignUpRequest) {
         if (userRepository.existsByEmail(authSignUpRequest.email())) {
             throw new CustomRuntimeException(ExceptionMessage.ALREADY_REGISTERED_USER_EMAIL);
