@@ -37,7 +37,7 @@ public class AuthController {
     ) {
         AuthSignUpResponse response = authService.signUp(authSignUpRequest);
 
-        return ResponseEntity.created(UriUtil.getSignInUri())
+        return ResponseEntity.created(UriUtil.getRedirectUriAfterSignUp())
                 .body(response);
     }
 }
