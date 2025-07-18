@@ -4,7 +4,7 @@ import java.net.URI;
 
 public class UriUtil {
 
-    public static URI getSignInUri() {
+    public static URI getRedirectUriAfterSignUp() {
         return URI.create("api/auth/signin");
     }
 }

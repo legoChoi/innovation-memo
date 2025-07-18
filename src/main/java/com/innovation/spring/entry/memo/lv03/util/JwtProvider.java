@@ -25,6 +25,11 @@ public class JwtProvider {
         );
     }
 
+    /**
+     * AccessToken 생성
+     * @param userId
+     * @return AccessToken(String)
+     */
     public String generateAccessToken(Long userId) {
         Date now = new Date();
 
